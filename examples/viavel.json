@@ -1,0 +1,1 @@
+{"slots":2,"rooms":[{"id":"sala_a","capacity":12,"resources":["projetor"]}],"workshops":[{"id":"desenho","duration":1,"attendees":8,"resources":["projetor"]},{"id":"leitura","duration":1,"attendees":6}]}

@@ -1,0 +1,1 @@
+{"slots":1,"rooms":[{"id":"sala_a","capacity":10},{"id":"sala_b","capacity":10}],"workshops":[{"id":"arte","duration":1,"attendees":4,"instructors":["educador_a"]},{"id":"musica","duration":1,"attendees":4,"instructors":["educador_a"]}]}

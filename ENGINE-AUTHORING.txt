@@ -1,0 +1,17 @@
+Arquivo permitido ao gerador: somente planejador_oficinas/core.py.
+Implemente o contrato integral do README; não altere nenhum outro arquivo.
+
+Importe a exceção pública estática com `from .errors import InputError`.
+API exata: def plan(document: dict, *, max_nodes: int = 20000) -> dict.
+Helpers devem ser funções no nível do módulo. Não use funções aninhadas,
+lambda, classes próprias, nonlocal, global, decorators ou geradores com yield.
+Use funções de módulo para chaves de sorted; não use lambda.
+Pode usar re e tipos de typing. Use somente dados locais e literais imutáveis
+no nível do módulo; sem variáveis globais mutáveis ou efeitos durante import.
+Não use f-strings, introspecção/dunders, atributos privados, filesystem,
+ambiente, processos, rede, tempo, aleatoriedade, imports dinâmicos ou callbacks.
+O guard é parse-only, não é um substituto para o sandbox ou o oráculo semântico.
+O estado mutável interno da busca pode ser passado entre helpers; ele deve ser
+construído a partir da entrada validada, sem modificar nenhum objeto da entrada.
+Mensagens de InputError são fixas e não repetem valores fornecidos.
+Não implemente testes, CLI, documentos, build, comandos ou acesso ao publicador.

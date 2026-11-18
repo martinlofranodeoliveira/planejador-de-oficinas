@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "planejador-de-oficinas"
+version = "0.1.0"
+description = "Planejador offline e determinístico de viabilidade de oficinas comunitárias"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Martin Lofrano"}]
+dependencies = []
+
+[project.scripts]
+planejador-de-oficinas = "planejador_oficinas.__main__:main"
+
+[tool.setuptools]
+packages = ["planejador_oficinas"]

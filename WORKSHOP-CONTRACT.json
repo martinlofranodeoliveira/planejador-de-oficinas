@@ -1,0 +1,66 @@
+{
+  "project": "planejador-de-oficinas",
+  "package": "planejador_oficinas",
+  "purpose": "Offline deterministic feasibility planner for community workshops; joint room, equipment, capacity, instructor and group scheduling, no production bookings.",
+  "api": "plan(document: dict, *, max_nodes: int = 20000) -> dict; InputError(ValueError); never mutate input",
+  "input": {
+    "slots": "required int 1..48",
+    "rooms": [
+      {
+        "id": "required ASCII [a-zA-Z0-9_-]{1,48}, unique",
+        "capacity": "required int 1..100000",
+        "resources": "optional distinct list of IDs, default []",
+        "blocked": "optional distinct slot indexes 0..slots-1, default []"
+      }
+    ],
+    "workshops": [
+      {
+        "id": "required unique ID",
+        "duration": "required int 1..slots",
+        "attendees": "required int 1..100000",
+        "resources": "optional distinct IDs, default []",
+        "instructors": "optional distinct IDs, default []",
+        "groups": "optional distinct IDs, default []",
+        "allowed_starts": "optional distinct ints 0..slots-duration, default all valid",
+        "allowed_rooms": "optional distinct existing room IDs, default all rooms"
+      }
+    ]
+  },
+  "limits": {
+    "rooms": "1..8",
+    "workshops": "0..12",
+    "input_bytes": 1048576,
+    "list_ids": "max 32 each (allowed_rooms max8, allowed_starts max48)",
+    "max_nodes": "integer 1..200000; bool disallowed"
+  },
+  "constraints": [
+    "Each workshop assigned exactly once at a contiguous start slot, finishing <= slots.",
+    "Room cannot overlap; no blocked room slot may be used.",
+    "attendees <= room capacity and required resources subset of room resources.",
+    "Shared instructors or groups cannot overlap even in different rooms.",
+    "All explicit allowed_rooms and allowed_starts respected; empty permitted list means no candidates."
+  ],
+  "search": "Sort rooms/workshops IDs; create candidates by ascending start then room ID; pick static increasing candidate-count then workshop-ID order. DFS try candidates; increment nodes for every candidate conflict check, including conflict; if all search exhausted return unsatisfiable. Before trying candidate with nodes == max_nodes return budget_exhausted unless solution or complete exhaustion already proved. Empty workshops scheduled with nodes0. Return first feasible, no optimality claim.",
+  "output": {
+    "status": "scheduled | unsatisfiable | budget_exhausted",
+    "assignments": [
+      {
+        "workshop": "ID",
+        "room": "ID",
+        "start": "int",
+        "end": "start+duration"
+      }
+    ],
+    "stats": {
+      "nodes": "candidate checks",
+      "limit": "max_nodes"
+    }
+  },
+  "output_rules": [
+    "assignments sorted by workshop ID when scheduled; otherwise [] (no partial solution)",
+    "status unsatisfiable means exhaustive proof within this finite input; budget_exhausted must never become unsatisfiable",
+    "Unknown fields/invalid type/duplicate IDs/out of bounds/missing field raise InputError without echoing input values."
+  ],
+  "cli": "python -m planejador_oficinas INPUT.json [--max-nodes N]; stdout JSON only; exit0 scheduled/1 unsatisfiable/3 budget_exhausted/2 invalid or file error; strict UTF8 JSON, reject duplicate keys and nonfinite numbers, max1MiB; fixed safe errors, do not echo arbitrary input/path values.",
+  "docs": "Portuguese README, deterministic feasible/impossible/resource-exhaustion examples, API and limits, distinction from freebusy-slot-studio/calendar and taskgraph-plan, MIT, contributing/security docs. No credentials/network/production integration."
+}
